@@ -22,5 +22,19 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-
-     
+      - name: Docker Login
+        uses: docker/login-action@v2.0.0
+        with:
+          username: ${{secrets.DOCKERHUB_USER}}
+          password: ${{secrets.DOCKERHUB-PWD}}
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v3.0.0
+        with:
+          file: ./src/DockerFile
+          context: ./src
+          push: true
+          tag: |
+            frafaelptu/kube-news:latest
+            frafaelptu/kube-news:${{github.run.number}}
+          
+      
